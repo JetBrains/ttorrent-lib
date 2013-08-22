@@ -183,15 +183,15 @@ public class Tracker {
 		}
 	}
 
-  public ConcurrentMap<String, TrackedTorrent> getTorrentsMap() {
-    return torrents;
-  }
+	/**
+	 *
+	 * @return list of tracker's torrents
+	 */
+	public Collection<TrackedTorrent> getTrackedTorrents() {
+		return torrents.values();
+	}
 
-  public Collection<TrackedTorrent> getTrackedTorrents(){
-    return torrents.values();
-  }
-
-  /**
+	/**
 	 * Announce a new torrent on this tracker.
 	 *
 	 * <p>
@@ -206,7 +206,8 @@ public class Tracker {
 	 * different from the supplied Torrent object if the tracker already
 	 * contained a torrent with the same hash.
 	 */
-	public synchronized TrackedTorrent announce(Torrent torrent) throws IOException, NoSuchAlgorithmException {
+	public synchronized TrackedTorrent announce(Torrent torrent)
+			throws IOException, NoSuchAlgorithmException {
 		TrackedTorrent existing = this.torrents.get(torrent.getHexInfoHash());
 
 		if (existing != null) {
@@ -215,13 +216,13 @@ public class Tracker {
 			return existing;
 		}
 
-      final TrackedTorrent result;
-      if (torrent instanceof  TrackedTorrent) {
-        result = (TrackedTorrent) torrent;
-      } else {
-        result = new TrackedTorrent(torrent);
-      }
-      this.torrents.put(torrent.getHexInfoHash(), result);
+		final TrackedTorrent result;
+		if (torrent instanceof TrackedTorrent) {
+			result = (TrackedTorrent)torrent;
+		} else {
+			result = new TrackedTorrent(torrent);
+		}
+		this.torrents.put(torrent.getHexInfoHash(), result);
 		logger.info("Registered new torrent for '{}' with hash {}.",
 			torrent.getName(), torrent.getHexInfoHash());
 		return result;

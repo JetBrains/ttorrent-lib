@@ -133,6 +133,7 @@ public class Torrent {
 	 * BitTorrent specification) and create a Torrent object from it.
 	 *
 	 * @param torrent The meta-info byte data.
+	 * @param parent The parent directory or location of the torrent files.
 	 * @param seeder Whether we'll be seeding for this torrent or not.
 	 * @throws IOException When the info dictionary can't be read or
 	 * encoded and hashed back to create the torrent's SHA-1 hash.
@@ -401,22 +402,22 @@ public class Torrent {
 		return this.seeder;
 	}
 
-  /**
+	/**
 	 * Save this torrent meta-info structure into a .torrent file.
 	 *
 	 * @param file The file to write to.
 	 * @throws IOException If an I/O error occurs while writing the file.
 	 */
 	public void save(File file) throws IOException {
-      FileOutputStream fOut = null;
-      try {
-        fOut = new FileOutputStream(file);
-        fOut.write(this.getEncoded());
-      } finally {
-        if (fOut != null){
-          fOut.close();
-        }
-      }
+		FileOutputStream fOut = null;
+		try {
+			fOut = new FileOutputStream(file);
+			fOut.write(this.getEncoded());
+		} finally {
+			if (fOut != null) {
+				fOut.close();
+			}
+		}
 	}
 
 	public static byte[] hash(byte[] data) throws NoSuchAlgorithmException {
@@ -961,8 +962,8 @@ public class Torrent {
 					torrent = Torrent.create(source, announceURI, creator);
 				}
 
-              fos.write(torrent.getEncoded());
-            } else {
+				fos.write(torrent.getEncoded());
+			} else {
 				Torrent.load(new File(filenameValue), true);
 			}
 		} catch (Exception e) {
